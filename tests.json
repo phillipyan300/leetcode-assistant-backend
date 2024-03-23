@@ -1,0 +1,97 @@
+{
+    "programs": {
+        "Two_Sum":
+        {
+            "toTest": "twoSum",
+            "tests": [
+                {
+                    "visible": 1,
+                    "parameters": [2,7,11,15],
+                    "target": 9,
+                    "success": 0
+        
+                },
+                {
+                    "visible": 1,
+                    "parameters": [3,2,4],
+                    "target": 6,
+                    "success": 0
+        
+                },
+                {
+                    "visible": 1,
+                    "parameters": [3,3],
+                    "target": 6,
+                    "success": 0
+        
+                },
+                {
+                    "visible": 0,
+                    "parameters": [],
+                    "target": 0,
+                    "success": 0
+                },
+                {
+                    "visible": 0,
+                    "parameters": [1, -1, 5, -2, 3],
+                    "target": 3,
+                    "success": 0
+                },
+                {
+                    "visible": 0,
+                    "parameters": [99, 1, 5, 7, 3, 6],
+                    "target": 106,
+                    "success": 0
+                }
+            ]
+        },
+        "big_One":
+        {
+            "toTest": "bigOne",
+            "tests": [
+                {
+                    "visible": 1,
+                    "parameters": [2,7,11,15],
+                    "target": 9,
+                    "success": 0
+        
+                },
+                {
+                    "visible": 1,
+                    "parameters": [3,2,4],
+                    "target": 6,
+                    "success": 0
+        
+                },
+                {
+                    "visible": 1,
+                    "parameters": [3,3],
+                    "target": 6,
+                    "success": 0
+        
+                },
+                {
+                    "visible": 0,
+                    "parameters": [],
+                    "target": 0,
+                    "success": 0
+                },
+                {
+                    "visible": 0,
+                    "parameters": [1, -1, 5, -2, 3],
+                    "target": 3,
+                    "success": 0
+                },
+                {
+                    "visible": 0,
+                    "parameters": [99, 1, 5, 7, 3, 6],
+                    "target": 106,
+                    "success": 0
+                }
+            ]
+        }
+
+    }
+
+}
+
