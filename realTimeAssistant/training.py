@@ -1,12 +1,15 @@
 import os
 import openai
 import time
+from dotenv import load_dotenv
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+load_dotenv()
+
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 # Upload file
 print('Uploading file...')
-file = openai.File.create(
+file = openai.files.create(
     file=open("training.jsonl", "rb"),
     purpose='fine-tune'
 )

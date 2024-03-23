@@ -6,42 +6,31 @@
             "tests": [
                 {
                     "visible": 1,
-                    "parameters": [2,7,11,15],
-                    "target": 9,
-                    "success": 0
+                    "parameters": [[2,7,11,15],9],
+                    "output": [0,1]
         
                 },
                 {
                     "visible": 1,
-                    "parameters": [3,2,4],
-                    "target": 6,
-                    "success": 0
+                    "parameters": [[3,2,4], 6],
+                    "output": [1,2]
         
                 },
                 {
                     "visible": 1,
-                    "parameters": [3,3],
-                    "target": 6,
-                    "success": 0
+                    "parameters": [[3,3], 6],
+                    "output": [0,1]
         
                 },
                 {
                     "visible": 0,
-                    "parameters": [],
-                    "target": 0,
-                    "success": 0
+                    "parameters": [[1, -1, 5, -2, 3], 3],
+                    "output": [2,3]
                 },
                 {
                     "visible": 0,
-                    "parameters": [1, -1, 5, -2, 3],
-                    "target": 3,
-                    "success": 0
-                },
-                {
-                    "visible": 0,
-                    "parameters": [99, 1, 5, 7, 3, 6],
-                    "target": 106,
-                    "success": 0
+                    "parameters": [[99, 1, 5, 7, 3, 6], 106],
+                    "output": [0,3]
                 }
             ]
         },
