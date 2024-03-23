@@ -14,7 +14,8 @@ CORS(app, resources={r"/*": {"origins": "*"}}, methods=['POST','GET'])
 # Expects json with fields: code: "code ", language:"language" problem:"problem"
 @app.route("/test_code", methods=["POST"])
 def test_code():
-    print("got api call")
+    print("Testing submitted code: ")
+
     data = request.get_json()
     raw_code = data.get("code")
     language = data.get("language")
@@ -23,14 +24,8 @@ def test_code():
     #Skeleton framework for response data, will add more later
     # Tests has a list of parameters
     response_data = {
-        "Success": False,
-        "Tests": { 1 :{"Visible": True, "Success": False, "Parameters":[[2,7,11,15]]},
-            
-        },
-        "Warnings" : {
-            "isCode": "No Code Written"
-        }
-
+        "Overall Success": False,
+        "Test Results": [], 
     }
     # No submission = return nothing inputed
     if not raw_code:
@@ -50,33 +45,45 @@ def test_code():
 
         #Add this line at the end of user code to actually run it
         templateAddToRun =  testsFile["programs"]["Two Sum"]["toTest"]
+
+        #This is to check to make sure that nothing fails. 
+        noFails = True
         for test in testList:
+            # Add an entry for this test in the return package
+            response_data["Test Results"].append({})
+            testDict = response_data["Test Results"][-1]
 
             #Use template to create the running line
-            addToRun = f"\n{templateAddToRun}({test["parameters"]})"
+            addToRun = f"\n {templateAddToRun}({test['parameters']})"
             codeToRun = raw_code + addToRun
             print(codeToRun)
             
             # Now run it with subprocess. For now just for python
-            result = subprocess.run([language, '-c', raw_code], capture_output=True, text=True)
-            print(result.stdout)
-            if not result.stderr:
-                print("error free")
+            result = subprocess.run([language, '-c', codeToRun], capture_output=True, text=True)
+
+            # Check for errors
+            if result.stderr:
+                noFails = False
+                testDict["Success"] = False
+            testDict["Success"] = True
+            testDict["Output"] = result.stdout
+            testDict["Error"] = result.stderr
                 
-        # Also need to capture any error
-        response_data["Success"] = True
+            print(result.stdout)
+            
+        if noFails:
+            response_data["Overall Success"] = True
         print(response_data)
         return jsonify(response_data)
         
+@app.route("/cycle_help", methods=["POST"])
+def cycle_help():
+    data = request.get_json()
+    problem = 2
+    raw_code = data.get("code")
 
-        
 
-
-
-
-
-    
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=3000)
+    app.run(debug=True, host='0.0.0.0', port=3001)
