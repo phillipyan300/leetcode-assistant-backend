@@ -1,9 +1,9 @@
 [
     {
         "id": 0,
-        "problem": "Given two strings s and t, return true if t is an anagram of s, and false otherwise.\nAn Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.",
+        "problem": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\nYou may assume that each input would have exactly one solution, and you may not use the same element twice.",
         "snapshot": "def twoSum(nums: list[int], target: int) -> list[int]:\n  hashmap = {}\n  for index, num in enumerate(nums):\n      find = target - num\n      if find in hashmap:\n          return [hashmap[find], index]\n      hashmap[num] = index",
-        "advice": "Hint: The given code mentions finding indices that add up in a list, but the problem actually requires checking for anagrams. To fix this, write a function that checks if two strings are anagrams. Remember to compare the lengths of the strings first before proceeding. ",
+        "advice": "Hint: Instead of storing the index of the current number, try storing the index of the number that complements the target in the hashmap. Remember, you need to return the index of the number that completes the target sum.",
         "counter": 1
     }
 ]

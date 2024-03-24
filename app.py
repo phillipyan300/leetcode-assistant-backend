@@ -5,7 +5,7 @@ import json
 import os
 from werkzeug.utils import secure_filename
 
-from assistant import normalCheckup
+from assistant import normalCheckup, summary
 from speech import transcribe
 
 
@@ -246,16 +246,28 @@ CORS(app, resources={r"/*": {"origins": "*"}}, methods=['POST','GET'])
 # Returns report card for this problem (include a graph with char count?)
 @app.route("/submit", methods=["POST"])
 def submit():
-
-    data = request.get_json()
-    raw_code = data.get("code")
-    language = data.get("language")
-    problem = data.get("problem")
+    # problem = "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\nYou may assume that each input would have exactly one solution, and you may not use the same element twice."
+#     raw_code = """def twoSum(nums: list[int], target: int) -> list[int]:
+#   hashmap = {}
+#   for index, num in enumerate(nums):
+#       find = target - num
+#       if find in hashmap:
+#           return [hashmap[find], index]
+#       hashmap[num] = index"""
+    raw_code = request.form["code"]
+    problem_name = request.form["problemName"]
+    file_path = "tests.json"
+    with open(file_path, 'r') as file:
+        testsFile = json.load(file)
+    problem = testsFile["programs"][problem_name]["description"]
+    
+    # language = data.form("language")
+    # problem = data.get("problem")
     # print(request)
     # print(request.files)
 
     #Assumes correct reception of the file
-    print("Received Audoi")
+    print("Received Audio")
     audio_file = request.files['file']
 
     filename = secure_filename(audio_file.filename)
@@ -266,14 +278,23 @@ def submit():
     audio_file_path = os.path.join("./audioTests", filename)
     audio_file.save(audio_file_path)
 
+    #The return object: 3 things, num tests cases, feedback + image
+    returnJSON = {}
+
     #Transcription
-    ##print(transcription)
+    transcription = transcribe("audio.webm")
+    print(type(transcription))
+    print(transcription)
+    
 
     #After transcription, we can do an analysis
-
+    returnJSON["feedback"] = summary(transcription, problem, raw_code)
+    
+    
     
     print("Testing submitted code: ")
     numCorrect = 0
+    totalTests = 0
 
     #Skeleton framework for response data, will add more later
     # Tests has a list of parameters
@@ -296,14 +317,15 @@ def submit():
         file_path = "tests.json"
         with open(file_path, 'r') as file:
             testsFile = json.load(file)
-        testList = testsFile["programs"][problem]["tests"]
+        testList = testsFile["programs"][problem_name]["tests"]
 
         #Add this line at the end of user code to actually run it
-        templateAddToRun =  testsFile["programs"][problem]["toTest"]
+        templateAddToRun =  testsFile["programs"][problem_name]["toTest"]
 
         #This is to check to make sure that nothing fails. 
         noFails = True
         for test in testList:
+            totalTests += 1
             # Add an entry for this test in the return package
             response_data["Test Results"].append({})
             testDict = response_data["Test Results"][-1]
@@ -316,7 +338,7 @@ def submit():
             print(codeToRun)
             
             # Now run it with subprocess. For now just for python
-            result = subprocess.run([language, '-c', codeToRun], capture_output=True, text=True)
+            result = subprocess.run(["python3", '-c', codeToRun], capture_output=True, text=True)
 
             #Strip std out of new lines of tabs and turn it into a list
             result.stdout = result.stdout.strip()
@@ -331,6 +353,7 @@ def submit():
                 testDict["Success"] = False
             else:
                 testDict["Success"] = True
+                numCorrect += 1
             testDict["Output"] = result.stdout
             testDict["Expected Output"] = str(test["output"])
             testDict["Error"] = result.stderr
@@ -340,6 +363,19 @@ def submit():
             
         if noFails:
             response_data["Overall Success"] = True
+
+    #Now get the message telling you how many tests you passed
+    correctString = [numCorrect, totalTests]
+    returnJSON["tests"] = correctString
+
+    print("RETURNED JSON")
+    print(returnJSON)
+    return returnJSON
+
+
+
+
+
         
 
 

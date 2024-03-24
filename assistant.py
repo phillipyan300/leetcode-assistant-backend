@@ -34,7 +34,7 @@ def normalCheckup(problem: str, snapshot: str):
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a problem determiner for partly finished code. You either say there is a major problem in the code, or there isn't a problem. Note that incomplete code is ok. Code with glaring technical problem is not"},
-            {"role": "user", "content": "Here is the problem: " + problem + ". Now this is the current status of the code:" + snapshot + "  If there is an error in the code say Yes. Pay specific attention to braces mismatches. Otherwise, say No."},
+            {"role": "user", "content": "Here is the problem: " + problem + ". Now this is the current status of the code:" + snapshot + "  If there is an error in the code say Yes. Pay specific attention to braces mismatches. Otherwise, say No. Note that hashmap[num] = index is not an error"},
         ]
     )
     isError = completion.choices[0].message.content
@@ -140,7 +140,7 @@ def normalCheckup(problem: str, snapshot: str):
     file_path = "./assistantLog.json"
 
     # If this is the first issue reported (also, this clears the file)
-
+    
 
     data = []
     # Read from the file, if it isn't empty (note the two brackets)
@@ -213,15 +213,75 @@ def normalCheckup(problem: str, snapshot: str):
 
 
 
-#  Should be able to ask GPT for help if stuck
-def giveHint():
-    #Suggest an 
-    pass
-
-
 #This should have access to all the questions asked
-def summary():
-    pass
+# returns a list which has line by line suggetions
+def summary(transcription: str, problem: str, snapshot: str):
+    client = OpenAI(
+        api_key=APIKEY,
+    )
+    # First process the transcriptions via bucketing
+
+    # mention data struct type
+    #print("The type of transcirption is: " +str(type(transcription)))
+    #print("The type of problem is: " + str(type(problem)))
+    completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a verbal examiner for algorithm problems. You are given a transcript of a user, and a problem and you need to find whether or not the user has mentioned the right data structure"},
+                {"role": "user", "content": "Here is the problem: " + problem + ". Now this is the user transcript" + str(transcription) + " Did they mention the right datastructure, like hashmap?"},
+            ]
+        )
+    rawDataStruct = completion.choices[0].message.content
+    #print(f"rawDataStruct {rawDataStruct}")
+
+    completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a rephraser. Rephrase this sentence regarding a missing or existing  mention of a data structure into a critique or priase"},
+                {"role": "user", "content": "Here is the judgment: " + rawDataStruct+ " Rephrase this so that it is of the form like 'You properly mentioned that this problem needs a hashmap' or 'You forgot to mention that this problem needs a hashmap'"},
+            ]
+        )
+    dataStruct = completion.choices[0].message.content
+    #print(f"dataStruct {dataStruct}")
+    
+    # mention runtime
+    completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a verbal examiner for algorithm problems. You are given a transcript of a user, and a problem and you need to find whether or not the user has mentioned the right big O notation runtime"},
+                {"role": "user", "content": "Here is the problem: " + problem + ". Now this is the user transcript" + transcription + " Did they mention the right runtime? For example, O(n) or O(n^2) or O(n^3)?"},
+            ]
+        )
+    rawRuntime = completion.choices[0].message.content
+    #print(f"rawRuntime {rawRuntime}")
+
+    completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a rephraser. Rephrase this sentence regarding a missing or existing  mention of the runtime into a critique or priase"},
+                {"role": "user", "content": "Here is the judgment: " + rawRuntime+ " Rephrase this so that it is of the form like 'You properly mentioned that this problem is O(nlogn)' or 'You forgot to mention that this problem has funtime O(nlogn)'"},
+            ]
+        )
+    runtime = completion.choices[0].message.content
+    #print(f"runtime {runtime}")
+
+    #Now to analyze the assistant log
+    file_path = "assistantLog.json"
+    with open(file_path, 'r') as file:
+        hintData = json.load(file)
+        hintData = str(hintData)
+    completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a feedback giver and will be given a algorithms problem and the hint logs given by a test giver. Use these two pieces of information to give suggestions to the user"},
+                {"role": "user", "content": "Here is the problem: " + problem+ " and here is the list of hints: " + hintData+ " Respond in 2-3 sentences about a few areas of improvement."},
+            ]
+        )
+    feedback = completion.choices[0].message.content
+
+    retList = [dataStruct,runtime, feedback]
+    return retList
+    
 
 
 if __name__ == '__main__':
