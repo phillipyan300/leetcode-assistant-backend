@@ -10,3 +10,28 @@ def twoSum(nums: list[int], target: int) -> list[int]:
 
 curl -X POST -H "Content-Type: application/json" -d '{"problem": "Two_Sum",
 "code": "def twoSum(nums: list[int], target: int):\n\thashmap = []\nfor index, num in enumerate(nums):\n\tfind = target - num ", "language":"python3"}' http://localhost:3001/cycle_help
+
+
+
+{
+        "problem" : "Valid_Anagram"
+        "Valid_Anagram":
+        {
+            "description": "Given two strings s and t, return true if t is an anagram of s, and false otherwise.\nAn Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.",
+            "toTest": "validAnagram",
+            "tests": [
+                {
+                    "visible": 1,
+                    "parameters": ["rat", "tar"],
+                    "output": True
+        
+                },
+                {
+                    "visible": 1,
+                    "parameters": ["asdf", "notAnagram"],
+                    "output": False
+        
+                }
+            ]
+        }
+}

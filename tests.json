@@ -1,63 +1,123 @@
 {
     "programs": {
-        "Two_Sum":
-        {
+        "Two_Sum": {
+            "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\nYou may assume that each input would have exactly one solution, and you may not use the same element twice.",
             "toTest": "twoSum",
             "tests": [
                 {
                     "visible": 1,
-                    "parameters": [[2,7,11,15],9],
-                    "output": [0,1]
-        
+                    "parameters": [
+                        [
+                            2,
+                            7,
+                            11,
+                            15
+                        ],
+                        9
+                    ],
+                    "output": [
+                        0,
+                        1
+                    ]
                 },
                 {
                     "visible": 1,
-                    "parameters": [[3,2,4], 6],
-                    "output": [1,2]
-        
+                    "parameters": [
+                        [
+                            3,
+                            2,
+                            4
+                        ],
+                        6
+                    ],
+                    "output": [
+                        1,
+                        2
+                    ]
                 },
                 {
                     "visible": 1,
-                    "parameters": [[3,3], 6],
-                    "output": [0,1]
-        
+                    "parameters": [
+                        [
+                            3,
+                            3
+                        ],
+                        6
+                    ],
+                    "output": [
+                        0,
+                        1
+                    ]
                 },
                 {
                     "visible": 0,
-                    "parameters": [[1, -1, 5, -2, 3], 3],
-                    "output": [2,3]
+                    "parameters": [
+                        [
+                            1,
+                            -1,
+                            5,
+                            -2,
+                            3
+                        ],
+                        3
+                    ],
+                    "output": [
+                        2,
+                        3
+                    ]
                 },
                 {
                     "visible": 0,
-                    "parameters": [[99, 1, 5, 7, 3, 6], 106],
-                    "output": [0,3]
+                    "parameters": [
+                        [
+                            99,
+                            1,
+                            5,
+                            7,
+                            3,
+                            6
+                        ],
+                        106
+                    ],
+                    "output": [
+                        0,
+                        3
+                    ]
                 }
             ]
         },
-        "big_One":
-        {
+        "big_One": {
             "toTest": "bigOne",
             "tests": [
                 {
                     "visible": 1,
-                    "parameters": [2,7,11,15],
+                    "parameters": [
+                        2,
+                        7,
+                        11,
+                        15
+                    ],
                     "target": 9,
                     "success": 0
-        
                 },
                 {
                     "visible": 1,
-                    "parameters": [3,2,4],
+                    "parameters": [
+                        3,
+                        2,
+                        4
+                    ],
                     "target": 6,
                     "success": 0
-        
                 },
                 {
                     "visible": 1,
-                    "parameters": [3,3],
+                    "parameters": [
+                        3,
+                        3
+                    ],
                     "target": 6,
                     "success": 0
-        
                 },
                 {
                     "visible": 0,
@@ -67,20 +127,52 @@
                 },
                 {
                     "visible": 0,
-                    "parameters": [1, -1, 5, -2, 3],
+                    "parameters": [
+                        1,
+                        -1,
+                        5,
+                        -2,
+                        3
+                    ],
                     "target": 3,
                     "success": 0
                 },
                 {
                     "visible": 0,
-                    "parameters": [99, 1, 5, 7, 3, 6],
+                    "parameters": [
+                        99,
+                        1,
+                        5,
+                        7,
+                        3,
+                        6
+                    ],
                     "target": 106,
                     "success": 0
                 }
             ]
+        },
+        "Valid_Anagram": {
+            "description": "Given two strings s and t, return true if t is an anagram of s, and false otherwise.\nAn Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.",
+            "toTest": "validAnagram",
+            "tests": [
+                {
+                    "visible": 1,
+                    "parameters": [
+                        "rat",
+                        "tar"
+                    ],
+                    "output": "True"
+                },
+                {
+                    "visible": 1,
+                    "parameters": [
+                        "asdf",
+                        "notAnagram"
+                    ],
+                    "output": "False"
+                }
+            ]
         }
-
     }
-
 }
-
