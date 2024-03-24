@@ -18,19 +18,21 @@ def normalCheckup(problem: str, snapshot: str):
     client = OpenAI(
         api_key=APIKEY,
     )
+    
+    print(snapshot)
 
     #1. First check if there is an error
     completion = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a problem determiner for partly finished code. You either say there is a major problem in the code, or there isn't a problem. Note that incomplete code is ok. Code with glaring technical problem is not"},
-            {"role": "user", "content": "Here is the problem: " + problem + ". Now this is the current status of the code:" + snapshot + " Say Yes. Say Yes if it is incomplete. Only if there is a syntax error in the code that has already been written, say no"},
+            {"role": "user", "content": "Here is the problem: " + problem + ". Now this is the current status of the code:" + snapshot + "  If there is an error in the code that has already been written, say Yes. Otherwise, say No"},
         ]
     )
     isError = completion.choices[0].message.content
     print(completion.choices[0].message.content)
 
-    if "Yes" in isError or "yes" in isError :
+    if "No" in isError or "No" in isError :
         return "No Issues"
 
     #Each of these api calls does exactly one thing; keeps it consistant and controllable
@@ -71,7 +73,7 @@ def normalCheckup(problem: str, snapshot: str):
     print(completion.choices[0].message.content)
     raw3 = completion.choices[0].message.content
 
-    return raw3
+    return str(raw3)
 
 
 

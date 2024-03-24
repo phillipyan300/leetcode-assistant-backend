@@ -3,6 +3,9 @@ import subprocess
 from flask_cors import CORS
 import json
 from assistant import normalCheckup
+import os
+from werkzeug.utils import secure_filename
+
 
 # ”
 import ast
@@ -22,7 +25,7 @@ PROBLEMMAP= {
         "Top_K_Frequent_Elements": "Given an integer array nums and an integer k, return the k most frequent elements."
         }
 
-@app.route("/get_question_<string:question>")
+@app.route("/get_question_<string:question>", methods=["GET", "POST"])
 def get_question(question):
     #rudimentary database
     if question in PROBLEMMAP:
@@ -69,6 +72,8 @@ def test_code():
         #This is to check to make sure that nothing fails. 
         noFails = True
         for test in testList:
+            if test["visible"] != 1:
+                continue
             # Add an entry for this test in the return package
             response_data["Test Results"].append({})
             testDict = response_data["Test Results"][-1]
@@ -131,12 +136,50 @@ def cycle_help():
     problemStatement = PROBLEMMAP[problem]
     raw_code = data.get("code")
 
+    print(raw_code)
+
     clue = normalCheckup(problemStatement, raw_code)
 
     if clue == "No Issues":
-        return ""
+        retDict = {"response": "No Issues"}
+        return jsonify(retDict)
     print(f"The clue is: {clue}")
-    return clue
+    retDict = {"response": clue}
+    return jsonify(retDict)
+
+
+CORS(app, resources={r"/*": {"origins": "*"}}, methods=['POST','GET'])
+
+
+# Takes in audio recording and submitted answer
+# Returns report card for this problem (include a graph with char count?)
+@app.route("/submit", methods=["POST"])
+def submit():
+    print(request)
+    print(request.files)
+    print(request.form)
+    print(request.data)
+    # if 'file' not in request.files:
+    #     print("no audio")
+    #     return jsonify({"error": "No audio part"}), 400
+
+    print("received")
+    audio_file = request.files['file']
+    filename = secure_filename(audio_file.filename)
+
+    file_size = audio_file.content_length
+    print(file_size)
+
+    audio_file_path = os.path.join("./audioTests", filename)
+    audio_file.save(audio_file_path)
+    return jsonify("test")
+
+
+
+
+
+
+
 
 
 
